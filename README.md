@@ -19,5 +19,9 @@ This software is no good yet. It needs a lot of polish and some TLC. User beware
 ## Installation
 TODO
 
+## Screenshots
+![SS1](https://raw.githubusercontent.com/segordon/zm-tattletale/master/screenshot1.png)
+![SS2](https://raw.githubusercontent.com/segordon/zm-tattletale/master/screenshot2.png)
+
 ## License
 TODO
