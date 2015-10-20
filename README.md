@@ -25,3 +25,6 @@ TODO
 
 ## License
 TODO
+
+## Thanks
+thanks to @pliablepixels for teaching me how to use their [zmeventserver] (https://github.com/pliablepixels/zmeventserver)
