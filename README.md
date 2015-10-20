@@ -1,7 +1,7 @@
-# zm-telltale
+# zm-tattletale
 
 ## Synopsis
-zm-telltale is a small python client which connects to a ZoneMinder event server, and creates notifications of varying types to alert the user to new ZoneMinder events.
+zm-tattletale is a small python client which connects to a ZoneMinder event server, and creates notifications of varying types to alert the user to new ZoneMinder events.
 
 
 ## Motivation
@@ -16,7 +16,6 @@ I pay more attention to my computer than my phone, so I needed a way to maintain
 
 ## Installation
 TODO
-
 
 ## License
 TODO
