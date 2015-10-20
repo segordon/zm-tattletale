@@ -27,4 +27,4 @@ TODO
 TODO
 
 ## Thanks
-thanks to @pliablepixels for teaching me how to use their [zmeventserver] (https://github.com/pliablepixels/zmeventserver)
+thanks to [@pliablepixels](https://github.com/pliablepixels/) for teaching me how to use their [zmeventserver] (https://github.com/pliablepixels/zmeventserver)
