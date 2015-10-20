@@ -1,3 +1,5 @@
+
+
 import websocket
 import ssl
 import json
@@ -19,15 +21,12 @@ enable_irritating_taskbar_pops = "1" # not yet implemented
 credentials = json.dumps({"event":"auth","data":{"user":user,"password":password}})
 
 # let's make a web socket
-
-
 ws = websocket.create_connection(
     server,
     sslopt={"cert_reqs": ssl.CERT_NONE, "check_hostname": False})
 
-# let's define those irritating dialog windows.
+# let's make those irritating dialog windows.
 # FIXME: windows only.
-
 messageBox = ctypes.windll.user32.MessageBoxW
 
 def main():
@@ -72,7 +71,7 @@ def listener_printer():
             # if enabled, make an obnoxious dialog window
             if enable_irritating_dialog_windows == "1":
                 messageBody = message + "\n" + eventUrlMessage
-                dialogReturn = messageBox(0, messageBody, eventName, 0x40 | 0x4)
+                dialogReturn = messageBox(0, messageBody, eventName, 0x40 | 0x4 )
                 if dialogReturn == 6:
                     webbrowser.open_new_tab(eventUniqueUrl)
                 elif dialogReturn == 7:
