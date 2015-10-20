@@ -31,15 +31,15 @@ messageBox = ctypes.windll.user32.MessageBoxW
 
 def main():
     # I am me.
-    print("Sending auth...")
+    print("\n" + "Sending auth...")
     ws.send(credentials)
     print("Receiving auth reply...")
     result = json.loads(ws.recv())
 
     # You are you.
     if result['status'] == 'Success':
-        print(result['status'] + "\n")
-        listener_printer()
+        print(result['status'] + "\n" + "\n" + "Starting to listen for events..")
+        event_listener()
         
     # Except when you aren't.
     else:
@@ -51,7 +51,7 @@ def main():
             pass
 
 # "The opposite of talking isn't listening. The opposite of talking is waiting." 
-def listener_printer():
+def event_listener():
     try:
         while True:
             received = json.loads(ws.recv())
