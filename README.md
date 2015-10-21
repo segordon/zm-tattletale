@@ -11,15 +11,16 @@ I pay more attention to my computer than my phone, so I needed a way to maintain
 This software is no good yet. It needs a lot of polish and some TLC. User beware.
 
 ## Requirements
-* Python 3
+* Python 3 and a bunch of modules *(TODO : pip install what?)*
 * Windows *FIXME: multiplatform support*
 * ZoneMinder 1.28.107 or greater
 * [zmeventserver] (https://github.com/pliablepixels/zmeventserver) 
 
 ## Installation
-TODO
+*TODO*
 
-## Problems TODO
+## Problems
+*TODO*
 * It doesn't care about dropped websockets
 * It's still ignoring SSL certs
 * It has no option for what monitors to watch
@@ -31,7 +32,7 @@ TODO
 ![SS2](https://raw.githubusercontent.com/segordon/zm-tattletale/master/screenshot2.png)
 
 ## License
-TODO
+*TODO*
 
 ## Thanks
 thanks to [@pliablepixels](https://github.com/pliablepixels/) for teaching me how to use their [zmeventserver] (https://github.com/pliablepixels/zmeventserver)
