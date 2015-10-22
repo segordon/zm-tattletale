@@ -8,7 +8,7 @@ zm-tattletale is a small python client which connects to a ZoneMinder event serv
 I pay more attention to my computer than my phone, so I needed a way to maintain my constant paranoid awareness while I was away from my phone (immersed in my computer), so I wrote this.
 
 ## Warnings
-This software is no good yet. It needs a lot of polish and some TLC. User beware.
+This software is no good yet. It needs a lot of polish and some TLC. User beware. It'll probably be totally re-written.
 
 ## Requirements
 * Python 3 and a bunch of modules *(TODO : pip install what?)*
