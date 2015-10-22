@@ -5,8 +5,6 @@ import ssl
 import json
 import ctypes
 import webbrowser
-#import _thread
-#import time
 
 # change these things
 user = "admin"
