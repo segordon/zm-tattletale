@@ -26,6 +26,7 @@ This software is no good yet. It needs a lot of polish and some TLC. User beware
 * It has no option for what monitors to watch
 * ONE EVENT AT A TIME, with a big long queue of them behind it.
 * No good interface (no one wants to ctrl-c)
+* add timestamps to log and alerts.
 
 ## Screenshots
 ![SS1](https://raw.githubusercontent.com/segordon/zm-tattletale/master/screenshot1.png)
