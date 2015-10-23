@@ -38,7 +38,7 @@ def main():
     if result['status'] == 'Success':
         print(result['status'] + "\n" + "\n" + "Starting to listen for events..")
         event_listener()
-        
+
     # Except when you aren't.
     else:
         print("They say you ain't who you said you are, kid. " + result['reason'])
@@ -48,7 +48,7 @@ def main():
         else:
             pass
 
-# "The opposite of talking isn't listening. The opposite of talking is waiting." 
+# "The opposite of talking isn't listening. The opposite of talking is waiting."
 def event_listener():
     try:
         while True:
