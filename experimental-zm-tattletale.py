@@ -98,17 +98,24 @@ def event_parser(received):
     print(message + eventUrlMessage)
 
 def main():
-    try:
-        websocket = make_websocket()
-        while websocket == True:
-            listener = event_listener()
-            if listener != False:
-                print(event_parser(listener))
-            if listener == False:
+    for i in range(0, retry_count):
+        while True:
+            try:
                 time.sleep(retry_sleep_time)
-                main()
-    except:
-        e = sys.exc_info()[0]
-        print("main function error: %s" % e)
+                websocket = make_websocket()
+                if websocket == True:
+                    while True:
+                        listener = event_listener()
+                        if listener != False:
+                            print(event_parser(listener))
+                        if listener == False:
+                            time.sleep(retry_sleep_time)
+                            main()
+                    else:
+                        break
+            except:
+                e = sys.exc_info()[0]
+                print("main function error: %s" % e)
+                break
 
 main()
