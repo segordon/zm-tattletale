@@ -116,3 +116,6 @@ def main():
                 break
 
 main()
+
+# TODO: multi-platform dialog windows, sounds, file logging, also
+# get rid of websocket dependency.
