@@ -82,12 +82,7 @@ def event_listener():
                 return False
 
 
-            # original websocket exception case
-            #except websocket._exceptions.WebSocketConnectionClosedException:
-            #    print("Websocket connection closed.")
-            #    return False
-
-
+# A function to parse out the events into something human-readable.
 def event_parser(received):
     events = received['events']
     eventName = events[0]['Name']
@@ -104,20 +99,15 @@ def event_parser(received):
 
 def main():
     try:
-        while make_websocket() == True:
-            while event_listener() != False:
-                event_listener()
-            if event_listener() == False:
+        websocket = make_websocket()
+        while websocket == True:
+            listener = event_listener()
+            if listener != False:
+                print(event_parser(listener))
+            if listener == False:
                 time.sleep(retry_sleep_time)
-                event_listener()
-        if make_websocket() == False:
-            print(str(make_websocket()))
-            time.sleep(retry_sleep_time)
-            make_websocket()
-        else:
-            print("make_websocket returned function " + str(make_websocket()))
+                main()
     except:
-        #debug code
         e = sys.exc_info()[0]
         print("main function error: %s" % e)
 
