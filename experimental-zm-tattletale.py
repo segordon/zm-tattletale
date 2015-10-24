@@ -43,8 +43,7 @@ def make_websocket():
         print("Creating websocket.")
     else:
         pass
-    ws = websocket.WebSocket(sslopt = {"cert_reqs": ssl.CERT_NONE,
-        "check_hostname": False})
+    ws = websocket.WebSocket(sslopt = {"cert_reqs": ssl.CERT_NONE})
     ws.connect(event_server)
     ws.send(make_credentials(user, password))
     credential_response = json.loads(ws.recv())
@@ -74,23 +73,24 @@ def event_listener():
                 return False
 
 
-# A function to parse out the events into something human-readable.
-#def event_parser(received):
-#    events = received['events']
-#    eventName = events[0]['Name']
-#    monitorId = events[0]['MonitorId']
-#    eventId = events[0]['EventId']
-#    message = ("Monitor name: " + eventName + "\n" + "Monitor ID: " +
-#        monitorId + "\n" + "Event ID: " + eventId + "\n")
-#    eventUniqueUrl = (zoneminder_server +
-#        "/index.php?view=event&eid=" + eventId +
-#        "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
-#    eventUrlMessage = ("Event URL: " + eventUniqueUrl +
-#        "\n" + "\n" + "Open event in browser?" + "\n")
-#    print(message + eventUrlMessage)
-
+# function to parse and print events in a human-readable manner.
 def event_parser(received):
-    print(received)
+    events = received['events']
+    for event in events:
+        event_name = event['Name']
+        monitor_id = event['MonitorId']
+        event_id = event['EventId']
+
+        message = ("\n" + "Monitor name: " + event_name + "\n"
+            + "Monitor ID: " + monitor_id + "\n" +
+            "Event ID: " + event_id + "\n")
+
+        eventUniqueUrl = (zoneminder_server +
+        "/index.php?view=event&eid=" + event_id +
+        "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
+        event_url_message = ("\n" + "Event URL: " + eventUniqueUrl)
+
+        print(message + event_url_message)
 
 def main():
     for i in range(0, retry_count):
@@ -114,7 +114,3 @@ def main():
                 break
 
 main()
-
-
-# TODO : straighten out event_parser and event_listener to use more
-# than the first event. probably rewrite the event_parser.
