@@ -6,8 +6,8 @@ __email__ = "seg@well.com"
 import json
 import websocket
 import ssl
-#import time
-#import sys
+import time
+import sys
 
 ### Put your credentials here!
 user = "admin"
@@ -18,11 +18,13 @@ event_server = "wss://192.168.1.7:9000"
 zoneminder_server = "https://192.168.1.7/zm/"
 
 ### Set some options!
-alert_dialog_windows = "1" #TODO
-alert_sounds = "1" #TODO
-alert_taskbar_popups = "1" #TODO
-alert_log_to_file = "1" #TODO
-alert_sleep_time = "0" #TODO
+alert_dialog_windows = True #TODO
+alert_sounds = True #TODO
+alert_taskbar_popups = True #TODO
+alert_log_to_file = True #TODO
+alert_sleep_time = 0 #TODO
+retry_sleep_time = 3
+retry_count = 3
 
 ### No user options below
 
@@ -47,14 +49,10 @@ def make_websocket():
     credential_response = json.loads(ws.recv())
     # if the server authentication was successful..
     if credential_response['status'] == 'Success':
-        # print a success message, and return the authentication status.
-        print("Authentication successful. OK to start listener.")
-        return 1
+        return True
     # if the server authentication was NOT successful..
     else:
-        # print a failure message, return error status, close websocket.
-        print("Authentication error: " + credential_response['reason'])
-        return 0
+        return False
         ws.close()
 
 
@@ -62,14 +60,18 @@ def make_websocket():
 def event_listener():
             try:
                 received = json.loads(ws.recv())
-                print(received)
                 return received
-            except websocket._exceptions.WebSocketConnectionClosedException:
-                print("Websocket connection closed.")
-                return 0
-                #e = sys.exc_info()[0] #debug code
-                #print("<p>Error: %s</p>" % e) #debug code
+            # let's use a general exception catch for testing.
+            except:
+                e = sys.exc_info()[0] #debug code
+                print("Error: %s" % e)
+                return False
 
+
+            # initial websocket exception case
+            #except websocket._exceptions.WebSocketConnectionClosedException:
+            #    print("Websocket connection closed.")
+            #    return False
 
 
 def event_parser(received):
@@ -77,24 +79,27 @@ def event_parser(received):
     eventName = events[0]['Name']
     monitorId = events[0]['MonitorId']
     eventId = events[0]['EventId']
-    message = ("Monitor name: " +
-        eventName + "\n" + "Monitor ID: " +
+    message = ("Monitor name: " + eventName + "\n" + "Monitor ID: " +
         monitorId + "\n" + "Event ID: " + eventId + "\n")
     eventUniqueUrl = (zoneminder_server +
         "/index.php?view=event&eid=" + eventId +
         "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
     eventUrlMessage = ("Event URL: " + eventUniqueUrl +
         "\n" + "\n" + "Open event in browser?" + "\n")
-
     print(message + eventUrlMessage)
 
-
-websocket_status = make_websocket()
-
-if websocket_status == 1:
-    if event_listener() is not 0:
-        event_listener()
+def main():
+    while make_websocket() == True:
+        while event_listener() != False:
+            event_listener()
+        if event_listener() == False:
+            time.sleep(retry_sleep_time)
+            event_listener()
+    if make_websocket() == False:
+        print(str(make_websocket))
+        time.sleep(retry_sleep_time)
+        make_websocket()
     else:
-        pass
-else:
-    pass
+        print("make_websocket returned " + str(make_websocket()))
+
+main()
