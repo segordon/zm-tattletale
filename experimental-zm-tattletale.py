@@ -23,8 +23,8 @@ alert_sounds = True #TODO
 alert_taskbar_popups = True #TODO
 alert_log_to_file = True #TODO
 alert_sleep_time = 0 #TODO
-retry_sleep_time = 3 #TODO
-retry_count = 3 #TODO
+retry_sleep_time = 3
+retry_count = 3
 debug_logging = False
 
 ### No user options below
@@ -85,10 +85,10 @@ def event_parser(received):
             + "Monitor ID: " + monitor_id + "\n" +
             "Event ID: " + event_id + "\n")
 
-        eventUniqueUrl = (zoneminder_server +
+        event_unique_url = (zoneminder_server +
         "/index.php?view=event&eid=" + event_id +
         "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
-        event_url_message = ("\n" + "Event URL: " + eventUniqueUrl)
+        event_url_message = ("\n" + "Event URL: " + event_unique_url)
 
         print(message + event_url_message)
 
