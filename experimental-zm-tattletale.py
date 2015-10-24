@@ -23,8 +23,9 @@ alert_sounds = True #TODO
 alert_taskbar_popups = True #TODO
 alert_log_to_file = True #TODO
 alert_sleep_time = 0 #TODO
-retry_sleep_time = 3
-retry_count = 3
+retry_sleep_time = 3 #TODO
+retry_count = 3 #TODO
+debug_logging = True
 
 ### No user options below
 
@@ -39,6 +40,10 @@ def make_credentials(user, password):
 def make_websocket():
     global ws
     # make a websocket object
+    if debug_logging == True:
+        print("Creating websocket.")
+    else:
+        pass
     ws = websocket.WebSocket(sslopt = {"cert_reqs": ssl.CERT_NONE,
         "check_hostname": False})
     # connect to our event server
@@ -49,26 +54,35 @@ def make_websocket():
     credential_response = json.loads(ws.recv())
     # if the server authentication was successful..
     if credential_response['status'] == 'Success':
+        if debug_logging == True:
+            print("Authentication successful.")
         return True
     # if the server authentication was NOT successful..
     else:
-        return False
+        print("credential_response: " + credential_response['status'])
         ws.close()
+        return False
 
 
 # A function to listen for output from our websocket.
 def event_listener():
             try:
+                if debug_logging == True:
+                    print("...Listening...")
+                else:
+                    pass
+
                 received = json.loads(ws.recv())
                 return received
+
             # let's use a general exception catch for testing.
             except:
-                e = sys.exc_info()[0] #debug code
-                print("Error: %s" % e)
+                e = sys.exc_info()[0]
+                print("event_listener function error: %s" % e)
                 return False
 
 
-            # initial websocket exception case
+            # original websocket exception case
             #except websocket._exceptions.WebSocketConnectionClosedException:
             #    print("Websocket connection closed.")
             #    return False
@@ -89,17 +103,22 @@ def event_parser(received):
     print(message + eventUrlMessage)
 
 def main():
-    while make_websocket() == True:
-        while event_listener() != False:
-            event_listener()
-        if event_listener() == False:
+    try:
+        while make_websocket() == True:
+            while event_listener() != False:
+                event_listener()
+            if event_listener() == False:
+                time.sleep(retry_sleep_time)
+                event_listener()
+        if make_websocket() == False:
+            print(str(make_websocket()))
             time.sleep(retry_sleep_time)
-            event_listener()
-    if make_websocket() == False:
-        print(str(make_websocket))
-        time.sleep(retry_sleep_time)
-        make_websocket()
-    else:
-        print("make_websocket returned " + str(make_websocket()))
+            make_websocket()
+        else:
+            print("make_websocket returned function " + str(make_websocket()))
+    except:
+        #debug code
+        e = sys.exc_info()[0]
+        print("main function error: %s" % e)
 
 main()
