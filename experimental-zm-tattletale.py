@@ -38,6 +38,7 @@ def make_credentials(user, password):
 
 # Function to form a web socket object to use as needed.
 def make_websocket():
+    # FIXME: global variables are hacky, but I like them :3
     global ws
     if debug_logging == True:
         print("Creating websocket.")
@@ -66,7 +67,7 @@ def event_listener():
                     pass
                 received = json.loads(ws.recv())
                 return received
-            # FIXME : general exception catches are hacky.
+            # FIXME : general exception catches are hacky, too.
             except:
                 e = sys.exc_info()[0]
                 print("event_listener function error: %s" % e)
@@ -83,7 +84,8 @@ def event_parser(received):
 
         message = ("\n" + "Monitor name: " + event_name + "\n"
             + "Monitor ID: " + monitor_id + "\n" +
-            "Event ID: " + event_id + "\n")
+            "Event ID: " + event_id + "\n" + "Event time: " +
+            time.strftime("%X %x") + "\n")
 
         event_unique_url = (zoneminder_server +
         "/index.php?view=event&eid=" + event_id +
