@@ -25,7 +25,7 @@ alert_log_to_file = True #TODO
 alert_sleep_time = 0 #TODO
 retry_sleep_time = 3 #TODO
 retry_count = 3 #TODO
-debug_logging = True
+debug_logging = False
 
 ### No user options below
 
@@ -39,25 +39,19 @@ def make_credentials(user, password):
 # Function to form a web socket object to use as needed.
 def make_websocket():
     global ws
-    # make a websocket object
     if debug_logging == True:
         print("Creating websocket.")
     else:
         pass
     ws = websocket.WebSocket(sslopt = {"cert_reqs": ssl.CERT_NONE,
         "check_hostname": False})
-    # connect to our event server
     ws.connect(event_server)
-    # send the event server our credentials as JSON
     ws.send(make_credentials(user, password))
-    # load the event server's response as a json object
     credential_response = json.loads(ws.recv())
-    # if the server authentication was successful..
     if credential_response['status'] == 'Success':
         if debug_logging == True:
             print("Authentication successful.")
         return True
-    # if the server authentication was NOT successful..
     else:
         print("credential_response: " + credential_response['status'])
         ws.close()
@@ -71,11 +65,9 @@ def event_listener():
                     print("...Listening...")
                 else:
                     pass
-
                 received = json.loads(ws.recv())
                 return received
-
-            # let's use a general exception catch for testing.
+            # FIXME : general exception catches are hacky.
             except:
                 e = sys.exc_info()[0]
                 print("event_listener function error: %s" % e)
@@ -83,19 +75,22 @@ def event_listener():
 
 
 # A function to parse out the events into something human-readable.
+#def event_parser(received):
+#    events = received['events']
+#    eventName = events[0]['Name']
+#    monitorId = events[0]['MonitorId']
+#    eventId = events[0]['EventId']
+#    message = ("Monitor name: " + eventName + "\n" + "Monitor ID: " +
+#        monitorId + "\n" + "Event ID: " + eventId + "\n")
+#    eventUniqueUrl = (zoneminder_server +
+#        "/index.php?view=event&eid=" + eventId +
+#        "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
+#    eventUrlMessage = ("Event URL: " + eventUniqueUrl +
+#        "\n" + "\n" + "Open event in browser?" + "\n")
+#    print(message + eventUrlMessage)
+
 def event_parser(received):
-    events = received['events']
-    eventName = events[0]['Name']
-    monitorId = events[0]['MonitorId']
-    eventId = events[0]['EventId']
-    message = ("Monitor name: " + eventName + "\n" + "Monitor ID: " +
-        monitorId + "\n" + "Event ID: " + eventId + "\n")
-    eventUniqueUrl = (zoneminder_server +
-        "/index.php?view=event&eid=" + eventId +
-        "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
-    eventUrlMessage = ("Event URL: " + eventUniqueUrl +
-        "\n" + "\n" + "Open event in browser?" + "\n")
-    print(message + eventUrlMessage)
+    print(received)
 
 def main():
     for i in range(0, retry_count):
@@ -107,7 +102,7 @@ def main():
                     while True:
                         listener = event_listener()
                         if listener != False:
-                            print(event_parser(listener))
+                            event_parser(listener)
                         if listener == False:
                             time.sleep(retry_sleep_time)
                             main()
@@ -119,3 +114,7 @@ def main():
                 break
 
 main()
+
+
+# TODO : straighten out event_parser and event_listener to use more
+# than the first event. probably rewrite the event_parser.
