@@ -74,6 +74,9 @@ def event_listener():
                 return False
 
 
+#def play_alert_sound():
+
+
 # function to parse and print events in a human-readable manner.
 def event_parser(received):
     events = received['events']
