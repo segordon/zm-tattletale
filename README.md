@@ -16,8 +16,13 @@ I pay more attention to my computer than my phone, so I needed a way to maintain
 * [zmeventserver] (https://github.com/pliablepixels/zmeventserver)
 
 ## Installation
+```
 pip install websockets
+```
+
+```
 pip install pyglet (sound alert support)
+```
 
 ## Problems
 *TODO*
