@@ -19,15 +19,16 @@ zoneminder_server = "https://192.168.1.7/zm" # no trailing slashes.
 
 ### Set some options!
 alert_dialog_windows = True #TODO
-alert_sounds = False
+alert_sounds = True
 alert_taskbar_popups = True #TODO
-alert_log_to_file = True #TODO
+alert_log_to_file = True
 alert_sleep_time = 0 #TODO
 retry_sleep_time = 3
 retry_count = 3
 debug_logging = False
+zm_log_file_name = "zm_alert_log.txt"
 
-### No user options below
+### NO USER OPTIONS BELOW
 
 
 # Function to form a JSON object with the authentication data needed.
@@ -80,6 +81,12 @@ def play_alert_sound():
     alert_noise.play()
 
 
+def log_to_file(event_name, monitor_id, event_id, event_time):
+    with open(zm_log_file_name, "a") as event_log:
+        event_log.write(event_time + " , " + "monitor_id: " + monitor_id +
+            " , " + "event_id: " + event_id + " , " + "event_name: " +
+            event_name + "\n")
+
 # function to parse and print events in a human-readable manner.
 def event_parser(received):
     events = received['events']
@@ -87,11 +94,12 @@ def event_parser(received):
         event_name = event['Name']
         monitor_id = event['MonitorId']
         event_id = event['EventId']
+        event_time = time.strftime("%X %x")
 
         message = ("\n" + "Monitor name: " + event_name + "\n"
             + "Monitor ID: " + monitor_id + "\n" +
             "Event ID: " + event_id + "\n" + "Event time: " +
-            time.strftime("%X %x") + "\n")
+            event_time + "\n")
 
         event_unique_url = (zoneminder_server +
         "/index.php?view=event&eid=" + event_id +
@@ -100,11 +108,22 @@ def event_parser(received):
 
         print(message + event_url_message)
 
-        if alert_sounds == True:
-            play_alert_sound()
-        else:
-            break
+        # begin handling of optional alert types.
+        try:
+            if alert_sounds == True:
+                play_alert_sound()
+            else:
+                break
 
+            if alert_log_to_file == True:
+                log_to_file(event_name, monitor_id, event_id, event_time)
+            else:
+                break
+
+        except:
+            e = sys.exc_info()[0]
+            print("event_parser function error: %s" % e)
+            return False
 def main():
     for i in range(0, retry_count):
         while True:
@@ -128,8 +147,8 @@ def main():
 
 main()
 
-# TODO: multi-platform dialog windows, file logging, also
-# get rid of websocket dependency.
+# TODO: multi-platform dialog windows, also
+# get rid of websocket dependency and taskbar alerts.
 
 # TODO: refactor module import for optional functionalities.
 #       imports shouldn't be in functions that are used commonly..
