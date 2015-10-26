@@ -30,12 +30,21 @@ zm_log_file_name = "zm_alert_log.txt"
 
 ### NO USER OPTIONS BELOW
 
+# an attempt to handle optional dependencies better at load-time.
+def optional_dependencies():
+    if alert_sounds == True:
+        global pyglet
+        import pyglet
+    else:
+        pass
+
 
 # Function to form a JSON object with the authentication data needed.
 def make_credentials(user, password):
     credentials = json.dumps(
         {"event":"auth","data":{"user":user,"password":password}})
     return credentials
+
 
 # Function to form a web socket object to use as needed.
 def make_websocket():
@@ -76,9 +85,8 @@ def event_listener():
 
 
 def play_alert_sound():
-    import pyglet
-    alert_noise = pyglet.media.load("alert.wav")
-    alert_noise.play()
+    alert_sound = pyglet.media.load("alert.wav")
+    alert_sound.play()
 
 
 def log_to_file(event_name, monitor_id, event_id, event_time):
@@ -124,7 +132,10 @@ def event_parser(received):
             e = sys.exc_info()[0]
             print("event_parser function error: %s" % e)
             return False
+
+
 def main():
+    optional_dependencies()
     for i in range(0, retry_count):
         while True:
             try:
@@ -144,14 +155,10 @@ def main():
                 e = sys.exc_info()[0]
                 print("main function error: %s" % e)
                 break
-
 main()
 
 # TODO: multi-platform dialog windows, also
 # get rid of websocket dependency and taskbar alerts.
-
-# TODO: refactor module import for optional functionalities.
-#       imports shouldn't be in functions that are used commonly..
 
 # TODO: event parser shouldn't be the event barker. Let's fix that
 #       one day.
