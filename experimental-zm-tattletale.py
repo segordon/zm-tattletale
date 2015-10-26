@@ -9,6 +9,8 @@ import ssl
 import time
 import sys
 
+#import threading
+
 ### Put your credentials here!
 user = "admin"
 password = "admin"
@@ -37,6 +39,11 @@ def optional_dependencies():
         import pyglet
     else:
         pass
+#    if alert_dialog_windows == True:
+#        global tkinter
+#        import tkinter
+#        global messagebox
+#        from tkinter import messagebox
 
 
 # Function to form a JSON object with the authentication data needed.
@@ -128,10 +135,33 @@ def event_parser(received):
             else:
                 break
 
+#            if alert_dialog_windows == True:
+#                dialog_window(event_name, message)
+#            else:
+#                break
+
         except:
             e = sys.exc_info()[0]
             print("event_parser function error: %s" % e)
             return False
+
+
+
+## FIXME: dialog window creation is disabled until I can find a non-blocking
+## method to do so with.
+
+
+# def dialog_window(event_name, message):
+#     root = Tk()
+#     prompt = 'hello'
+#     label1 = Label(root, text=prompt, width=len(prompt))
+#     label1.pack()
+
+#     def close():
+#         root.destroy()
+
+#     root.after(45, close
+#     root.mainloop()
 
 
 def main():
