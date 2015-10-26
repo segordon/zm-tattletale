@@ -8,6 +8,9 @@ import websocket
 import ssl
 import time
 import sys
+from tkinter import messagebox # dialog window option
+import tkinter # dialog window option
+
 
 ### Put your credentials here!
 user = "admin"
@@ -18,23 +21,28 @@ event_server = "wss://192.168.1.7:9000"
 zoneminder_server = "https://192.168.1.7/zm" # no trailing slashes.
 
 ### Set some options!
-alert_dialog_windows = True #TODO
+
+alert_dialog_windows = True # Work In Progress.
 alert_sounds = True
+alert_sound_file = "alert.wav"
 alert_taskbar_popups = True #TODO
 alert_log_to_file = True
 alert_sleep_time = 0 #TODO
 retry_sleep_time = 3
 retry_count = 3
-debug_logging = True
+debug_logging = False
 zm_log_file_name = "zm_alert_log.txt"
 
 ### NO USER OPTIONS BELOW
 
-# an attempt to handle optional dependencies better at load-time.
+# an attempt to handle optional dependencies and options better at load-time.
 def optional_dependencies():
     if alert_sounds == True:
         global pyglet
         import pyglet
+    if alert_dialog_windows == True:
+        root = tkinter.Tk()
+        root.withdraw()
     else:
         pass
 
@@ -68,6 +76,19 @@ def make_websocket():
         return False
 
 
+def dialog_window(message, event_url_message):
+    import webbrowser
+    if debug_logging == True:
+        print("Opening dialog window.")
+    else:
+        pass
+    browser_result = messagebox.askquestion("Event",message + "\n" + "Open browser to event?")
+    if browser_result == 'yes':
+        webbrowser.open(event_url_message,2,True)
+    else:
+        pass
+
+
 # A function to listen for output from our websocket.
 def event_listener():
             try:
@@ -86,11 +107,12 @@ def event_listener():
 
 def play_alert_sound():
     if debug_logging == True:
-        print("Playing alert.wav")
+        print("Playing alert_sound_file.")
     else:
         pass
-    alert_sound = pyglet.media.load("alert.wav")
+    alert_sound = pyglet.media.load(alert_sound_file)
     alert_sound.play()
+    time.sleep(.5)
 
 
 def log_to_file(event_name, monitor_id, event_id, event_time):
@@ -103,6 +125,7 @@ def log_to_file(event_name, monitor_id, event_id, event_time):
             " , " + "event_id: " + event_id + " , " + "event_name: " +
             event_name + "\n")
 
+
 # function to parse and print events in a human-readable manner.
 def event_parser(received):
     events = received['events']
@@ -114,13 +137,13 @@ def event_parser(received):
 
         message = ("\n" + "Monitor name: " + event_name + "\n"
             + "Monitor ID: " + monitor_id + "\n" +
-            "Event ID: " + event_id + "\n" + "Event time: " +
-            event_time + "\n")
+            "Event ID: " + event_id + "\n" + "Time processed: " +
+            event_time + "\n" + "\n")
 
         event_unique_url = (zoneminder_server +
         "/index.php?view=event&eid=" + event_id +
         "&trms=1&attr1=MonitorId&op1=%3d&val1=5&page=1")
-        event_url_message = ("\n" + "Event URL: " + event_unique_url)
+        event_url_message = (event_unique_url)
 
         print(message + event_url_message)
 
@@ -130,6 +153,8 @@ def event_parser(received):
                 play_alert_sound()
             if alert_log_to_file == True:
                 log_to_file(event_name, monitor_id, event_id, event_time)
+            if alert_dialog_windows == True:
+                dialog_window(message, event_url_message)
             else:
                 break
 
@@ -137,7 +162,6 @@ def event_parser(received):
             e = sys.exc_info()[0]
             print("event_parser function error: %s" % e)
             return False
-
 
 
 def main():
@@ -161,10 +185,18 @@ def main():
                 e = sys.exc_info()[0]
                 print("main function error: %s" % e)
                 break
+
 main()
 
-# TODO: multi-platform dialog windows, also
-# get rid of websocket dependency and taskbar alerts.
+
+
+# TODO: Alert_Dialog_Windows ARE BLOCKING as of now. They will make for
+# timestamps, because the dialog waits for user interaction on the main thread.
+# This will be fixed one day, til then be aware of this limitation.
+
+# TODO: get rid of websocket dependency and add taskbar alerts.
 
 # TODO: event parser shouldn't be the event barker. Let's fix that
 #       one day.
+
+# TODO: add interface for telling zmeventserver which monitors to report on
