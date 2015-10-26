@@ -15,11 +15,11 @@ password = "admin"
 
 ### Put your server information here!
 event_server = "wss://192.168.1.7:9000"
-zoneminder_server = "https://192.168.1.7/zm/"
+zoneminder_server = "https://192.168.1.7/zm" # no trailing slashes.
 
 ### Set some options!
 alert_dialog_windows = True #TODO
-alert_sounds = True #TODO
+alert_sounds = False
 alert_taskbar_popups = True #TODO
 alert_log_to_file = True #TODO
 alert_sleep_time = 0 #TODO
@@ -74,7 +74,10 @@ def event_listener():
                 return False
 
 
-#def play_alert_sound():
+def play_alert_sound():
+    import pyglet
+    alert_noise = pyglet.media.load("alert.wav")
+    alert_noise.play()
 
 
 # function to parse and print events in a human-readable manner.
@@ -96,6 +99,11 @@ def event_parser(received):
         event_url_message = ("\n" + "Event URL: " + event_unique_url)
 
         print(message + event_url_message)
+
+        if alert_sounds == True:
+            play_alert_sound()
+        else:
+            break
 
 def main():
     for i in range(0, retry_count):
@@ -120,5 +128,11 @@ def main():
 
 main()
 
-# TODO: multi-platform dialog windows, sounds, file logging, also
+# TODO: multi-platform dialog windows, file logging, also
 # get rid of websocket dependency.
+
+# TODO: refactor module import for optional functionalities.
+#       imports shouldn't be in functions that are used commonly..
+
+# TODO: event parser shouldn't be the event barker. Let's fix that
+#       one day.
