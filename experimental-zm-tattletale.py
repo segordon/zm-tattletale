@@ -9,8 +9,6 @@ import ssl
 import time
 import sys
 
-#import threading
-
 ### Put your credentials here!
 user = "admin"
 password = "admin"
@@ -27,7 +25,7 @@ alert_log_to_file = True
 alert_sleep_time = 0 #TODO
 retry_sleep_time = 3
 retry_count = 3
-debug_logging = False
+debug_logging = True
 zm_log_file_name = "zm_alert_log.txt"
 
 ### NO USER OPTIONS BELOW
@@ -39,11 +37,6 @@ def optional_dependencies():
         import pyglet
     else:
         pass
-#    if alert_dialog_windows == True:
-#        global tkinter
-#        import tkinter
-#        global messagebox
-#        from tkinter import messagebox
 
 
 # Function to form a JSON object with the authentication data needed.
@@ -92,11 +85,19 @@ def event_listener():
 
 
 def play_alert_sound():
+    if debug_logging == True:
+        print("Playing alert.wav")
+    else:
+        pass
     alert_sound = pyglet.media.load("alert.wav")
     alert_sound.play()
 
 
 def log_to_file(event_name, monitor_id, event_id, event_time):
+    if debug_logging == True:
+        print("Writing line to log.")
+    else:
+        pass
     with open(zm_log_file_name, "a") as event_log:
         event_log.write(event_time + " , " + "monitor_id: " + monitor_id +
             " , " + "event_id: " + event_id + " , " + "event_name: " +
@@ -127,41 +128,16 @@ def event_parser(received):
         try:
             if alert_sounds == True:
                 play_alert_sound()
-            else:
-                break
-
             if alert_log_to_file == True:
                 log_to_file(event_name, monitor_id, event_id, event_time)
             else:
                 break
-
-#            if alert_dialog_windows == True:
-#                dialog_window(event_name, message)
-#            else:
-#                break
 
         except:
             e = sys.exc_info()[0]
             print("event_parser function error: %s" % e)
             return False
 
-
-
-## FIXME: dialog window creation is disabled until I can find a non-blocking
-## method to do so with.
-
-
-# def dialog_window(event_name, message):
-#     root = Tk()
-#     prompt = 'hello'
-#     label1 = Label(root, text=prompt, width=len(prompt))
-#     label1.pack()
-
-#     def close():
-#         root.destroy()
-
-#     root.after(45, close
-#     root.mainloop()
 
 
 def main():
