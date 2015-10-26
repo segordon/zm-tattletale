@@ -20,8 +20,10 @@ I pay more attention to my computer than my phone, so I needed a way to maintain
 pip install websockets
 ```
 
+for sound alert support:
+
 ```
-pip install pyglet (sound alert support)
+pip install pyglet
 ```
 
 ## Problems
