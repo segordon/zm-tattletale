@@ -191,14 +191,12 @@ main()
 
 
 # TODO: Alert_Dialog_Windows ARE BLOCKING as of now. They will make for
-# timestamps, because the dialog waits for user interaction on the main thread.
-# This will be fixed one day, til then be aware of this limitation.
+# dishonest timestamps, because the dialog waits for user interaction on the
+# main thread. This will be fixed one day, til then be aware of this
+# limitation.
 
-# TODO: get rid of websocket dependency and add taskbar alerts.
-
-# TODO: event parser shouldn't be the event barker. Let's fix that
-#       one day.
-
-# TODO: add interface for telling zmeventserver which monitors to report on
+# TODO: get rid of websocket dependency and add taskbar alerts. event parser
+# shouldn't be the event barker. Let's fix that one day. add interface
+# for telling zmeventserver which monitors to report on
 
 # FIXME: main event loop is buggy, bypassing retry count limits.
