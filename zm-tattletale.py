@@ -22,7 +22,7 @@ zoneminder_server = "https://192.168.1.7/zm" # no trailing slashes.
 
 ### Set some options!
 
-alert_dialog_windows = True # Work In Progress.
+alert_dialog_windows = False # Work In Progress.
 alert_sounds = True
 alert_sound_file = "alert.wav"
 alert_taskbar_popups = True #TODO
@@ -200,3 +200,5 @@ main()
 #       one day.
 
 # TODO: add interface for telling zmeventserver which monitors to report on
+
+# FIXME: main event loop is buggy, bypassing retry count limits.
