@@ -195,7 +195,7 @@ main()
 # main thread. This will be fixed one day, til then be aware of this
 # limitation.
 
-# TODO: get rid of websocket dependency and add taskbar alerts. event parser
+    # TODO: get rid of websocket dependency and add taskbar alerts. event parser
 # shouldn't be the event barker. Let's fix that one day. add interface
 # for telling zmeventserver which monitors to report on
 

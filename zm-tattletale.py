@@ -201,5 +201,3 @@ main()
 #       one day.
 
 # TODO: add interface for telling zmeventserver which monitors to report on
-
-# FIXME: main event loop is buggy, bypassing retry count limits.
