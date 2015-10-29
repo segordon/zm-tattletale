@@ -201,3 +201,5 @@ main()
 #       one day.
 
 # TODO: add interface for telling zmeventserver which monitors to report on
+
+# TODO: new zmeventserver seems to have broken this. will fix when time permits.
